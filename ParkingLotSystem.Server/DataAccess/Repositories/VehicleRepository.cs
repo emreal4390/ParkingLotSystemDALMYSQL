@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
 
+
 namespace ParkingLotSystem.DataAccess.Repositories
 {
     public class VehicleRepository : GenericRepository<Vehicle>, IVehicleRepository
@@ -47,11 +48,11 @@ namespace ParkingLotSystem.DataAccess.Repositories
 
             if (minDuration.HasValue)
                 vehicles = vehicles.Where(v => v.ExitTime != null &&
-                    (EF.Functions.DateDiffMinute(v.EntryTime, v.ExitTime) >= minDuration));
+                     MySqlDbFunctionsExtensions.DateDiffMinute(EF.Functions, v.EntryTime, v.ExitTime) <= maxDuration);
 
             if (maxDuration.HasValue)
                 vehicles = vehicles.Where(v => v.ExitTime != null &&
-                    (EF.Functions.DateDiffMinute(v.EntryTime, v.ExitTime) <= maxDuration));
+                    (MySqlDbFunctionsExtensions.DateDiffMinute(EF.Functions, v.EntryTime, v.ExitTime) <= maxDuration));
 
             return await vehicles.ToListAsync();
         }

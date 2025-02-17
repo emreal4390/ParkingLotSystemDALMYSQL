@@ -8,10 +8,11 @@ using ParkingLotSystem.Business.Services;
 using ParkingLotSystem.DataAccess.Interfaces;
 using ParkingLotSystem.DataAccess.Repositories;
 using ParkingLotSystem.DataAccess.Contexts;
+using Pomelo.EntityFrameworkCore.MySql;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 🔹 CORS Politikası Tanımlama (React Uygulaması İçin)
+//  CORS Politikası Tanımlama (React Uygulaması İçin)
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReactApp",
@@ -21,11 +22,19 @@ builder.Services.AddCors(options =>
                         .AllowCredentials());
 });
 
-// 🔹 Veritabanı Bağlantısı
-builder.Services.AddDbContext<ParkingLotSystemDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+////  Veritabanı Bağlantısı
+//builder.Services.AddDbContext<ParkingLotSystemDbContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// 🔹 JWT Authentication Konfigürasyonu
+
+// MySQL Bağlantısı
+builder.Services.AddDbContext<ParkingLotSystemDbContext>(options =>
+    options.UseMySql(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        new MySqlServerVersion(new Version(8, 0, 40)) 
+    ));
+
+//  JWT Authentication Konfigürasyonu
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -41,7 +50,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-// 🔹 Swagger Konfigürasyonu + JWT Desteği
+//  Swagger Konfigürasyonu + JWT Desteği
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Parking Lot API", Version = "v1" });
@@ -72,11 +81,11 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
-// 🔹 Controller ve API Endpoint'lerini Kaydetme
+//  Controller ve API Endpoint'lerini Kaydetme
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// 🔹 Bağımlılıkları (Dependency Injection) Tanımlama
+//  Bağımlılıkları (Dependency Injection) Tanımlama
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 builder.Services.AddScoped<ISiteService, SiteService>();
@@ -87,7 +96,7 @@ builder.Services.AddScoped<ISiteRepository, SiteRepository>();
 
 var app = builder.Build();
 
-// 🔹 Middleware Kullanımı
+//  Middleware Kullanımı
 app.UseCors("AllowReactApp");
 
 app.UseAuthentication();  // Kullanıcı kimlik doğrulaması

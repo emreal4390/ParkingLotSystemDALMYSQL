@@ -7,7 +7,7 @@ const Home = () => {
     const [licensePlate, setLicensePlate] = useState("");
     const [ownerName, setOwnerName] = useState("");
     const [apartmentNumber, setApartmentNumber] = useState("");
-    const [showForm, setShowForm] = useState(false);
+    
     const [vehicles, setVehicles] = useState([]);
     
 
@@ -35,6 +35,8 @@ const Home = () => {
             .catch(error => console.error("Araçları yükleme başarısız:", error));
     };
 
+    
+
     const generateRandomPlate = () => {
         const randomNumbers1 = Math.floor(10 + Math.random() * 90);
         const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -45,8 +47,10 @@ const Home = () => {
 
     const handleEntryClick = () => {
         setLicensePlate(generateRandomPlate());
-        setShowForm(true);
+        
+        
     };
+
 
     const handleSubmit = async () => {
         const token = localStorage.getItem("token");
@@ -135,7 +139,7 @@ const Home = () => {
                 <button className="button-image exit-button" onClick={handleExitClick} />
             </div>
 
-            {showForm && (
+            
                 <div className="form-container">
                     <h3>Araç Bilgisi</h3>
                     <label>Plaka:</label>
@@ -149,7 +153,7 @@ const Home = () => {
 
                     <button className="btn btn-primary" onClick={handleSubmit}>Kaydet</button>
                 </div>
-            )}
+            
         </div>
     );
 };

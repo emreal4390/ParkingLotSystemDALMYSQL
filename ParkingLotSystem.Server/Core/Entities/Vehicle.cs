@@ -25,7 +25,7 @@ namespace ParkingLotSystem.Server.Core.Entities
 
         public int SiteID { get; set; }
 
-        [ForeignKey("SiteID")]
-        public virtual Site Site { get; set; }
+        //[ForeignKey("SiteID")]
+        //public virtual Site Site { get; set; }
     }
 }
