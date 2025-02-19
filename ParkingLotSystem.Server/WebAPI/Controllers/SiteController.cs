@@ -1,11 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ParkingLotSystem.Business.Interfaces;
-using ParkingLotSystem.Server.Core.Entities;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using ParkingLotSystem.Server.Business.Interfaces;
 
-namespace ParkingLotSystem.WebAPI.Controllers
+namespace ParkingLotSystem.Server.WebAPI.Controllers
 {
     [Route("api/sites")]
     [ApiController]

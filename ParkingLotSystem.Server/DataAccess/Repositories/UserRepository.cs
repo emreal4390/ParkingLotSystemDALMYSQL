@@ -1,10 +1,10 @@
-﻿using ParkingLotSystem.DataAccess.Contexts;
-using ParkingLotSystem.DataAccess.Interfaces;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ParkingLotSystem.Server.Core.Entities;
+using ParkingLotSystem.Server.DataAccess.Contexts;
+using ParkingLotSystem.Server.DataAccess.Interfaces;
 
-namespace ParkingLotSystem.DataAccess.Repositories
+namespace ParkingLotSystem.Server.DataAccess.Repositories
 {
     public class UserRepository : GenericRepository<User>, IUserRepository
     {

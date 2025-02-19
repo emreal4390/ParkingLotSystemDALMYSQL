@@ -1,9 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using ParkingLotSystem.Business.Services;
-using ParkingLotSystem.Core.DTOs;
+using ParkingLotSystem.Server.Business.Interfaces;
+using ParkingLotSystem.Server.Core.DTOs;
 
-namespace ParkingLotSystem.WebAPI.Controllers
+namespace ParkingLotSystem.Server.WebAPI.Controllers
 {
     [Route("api/auth")]
     [ApiController]

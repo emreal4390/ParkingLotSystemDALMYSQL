@@ -1,10 +1,10 @@
-﻿using ParkingLotSystem.DataAccess.Interfaces;
-using ParkingLotSystem.DataAccess.Contexts;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using ParkingLotSystem.Server.DataAccess.Contexts;
+using ParkingLotSystem.Server.DataAccess.Interfaces;
 
-namespace ParkingLotSystem.DataAccess.Repositories
+namespace ParkingLotSystem.Server.DataAccess.Repositories
 {
     public class GenericRepository<T> : IRepository<T> where T : class
     {

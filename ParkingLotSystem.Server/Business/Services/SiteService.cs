@@ -1,10 +1,7 @@
-﻿using ParkingLotSystem.Business.Interfaces;
-using ParkingLotSystem.DataAccess.Interfaces;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using ParkingLotSystem.Server.Core.Entities;
+﻿using ParkingLotSystem.Server.Business.Interfaces;
+using ParkingLotSystem.Server.DataAccess.Interfaces;
 
-namespace ParkingLotSystem.Business.Services
+namespace ParkingLotSystem.Server.Business.Services
 {
     public class SiteService : ISiteService
     {

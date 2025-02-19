@@ -1,4 +1,4 @@
-﻿namespace ParkingLotSystem.Core.DTOs
+﻿namespace ParkingLotSystem.Server.Core.DTOs
 {
     public class UserLoginDto
     {

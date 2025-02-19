@@ -1,24 +1,27 @@
-﻿using ParkingLotSystem.DataAccess.Interfaces;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using Microsoft.IdentityModel.Tokens;
+using ParkingLotSystem.Server.Business.Interfaces;
+using ParkingLotSystem.Server.Core.DTOs;
+using ParkingLotSystem.Server.Core.Entities;
+using ParkingLotSystem.Server.DataAccess.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.IdentityModel.Tokens;
-using ParkingLotSystem.Server.Core.Entities;
 
-namespace ParkingLotSystem.Business.Services
+namespace ParkingLotSystem.Server.Business.Services
 {
     public class AuthService : IAuthService
     {
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
+        private readonly HttpClient _httpClient;
 
-        public AuthService(IUserRepository userRepository, IConfiguration configuration)
+
+        public AuthService(IUserRepository userRepository, IConfiguration configuration, HttpClient httpClient)
         {
             _userRepository = userRepository;
             _configuration = configuration;
+            _httpClient = httpClient;
         }
 
         public async Task<(string token, string role, int siteID, string siteSecret)> AuthenticateAsync(string email, string password)
@@ -42,8 +45,8 @@ namespace ParkingLotSystem.Business.Services
                 new Claim(ClaimTypes.Name, user.FullName),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.Role),
-                new Claim("SiteID", user.SiteID.ToString()), // ✅ Kullanıcının SiteID'sini ekledik
-                new Claim("SiteSecret", user.Site.SiteSecret) // ✅ Kullanıcının SiteSecret'ini ekledik
+                new Claim("SiteID", user.SiteID.ToString()), //  Kullanıcının SiteID'sini ekledik
+                new Claim("SiteSecret", user.Site.SiteSecret) //  Kullanıcının SiteSecret'ini ekledik
             };
 
             var token = new JwtSecurityToken(
@@ -56,5 +59,23 @@ namespace ParkingLotSystem.Business.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        public async Task<int?> GetSiteIdFromAuthAsync(string clientId, string siteSecret)
+        {
+            var authRequest = new
+            {
+                ClientId = clientId,
+               SiteSecret= siteSecret,
+            };
+
+            var response = await _httpClient.PostAsJsonAsync("https://authserver.com/api/auth/getSiteId", authRequest);
+
+            if (!response.IsSuccessStatusCode)
+                return null;
+
+            var responseData = await response.Content.ReadFromJsonAsync<AuthResponseDto>();
+            return responseData?.SiteId;
+        }
+
     }
 }

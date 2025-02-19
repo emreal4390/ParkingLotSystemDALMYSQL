@@ -3,12 +3,12 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using ParkingLotSystem.Business.Interfaces;
-using ParkingLotSystem.Business.Services;
-using ParkingLotSystem.DataAccess.Interfaces;
-using ParkingLotSystem.DataAccess.Repositories;
-using ParkingLotSystem.DataAccess.Contexts;
 using Pomelo.EntityFrameworkCore.MySql;
+using ParkingLotSystem.Server.DataAccess.Contexts;
+using ParkingLotSystem.Server.DataAccess.Repositories;
+using ParkingLotSystem.Server.Business.Interfaces;
+using ParkingLotSystem.Server.Business.Services;
+using ParkingLotSystem.Server.DataAccess.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

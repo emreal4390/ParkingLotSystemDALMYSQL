@@ -47,8 +47,7 @@ const Home = () => {
 
     const handleEntryClick = () => {
         setLicensePlate(generateRandomPlate());
-        
-        
+   
     };
 
 
@@ -91,8 +90,6 @@ const Home = () => {
         }
     };
 
-
-   
 
     // **EXIT butonu: Rastgele bir aracın çıkışını gerçekleştirir.**
     const handleExitClick = () => {

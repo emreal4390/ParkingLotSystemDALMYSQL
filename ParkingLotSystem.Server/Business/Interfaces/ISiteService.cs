@@ -1,9 +1,4 @@
-﻿
-using ParkingLotSystem.Server.Core.Entities;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-
-namespace ParkingLotSystem.Business.Interfaces
+﻿namespace ParkingLotSystem.Server.Business.Interfaces
 {
     public interface ISiteService
     {

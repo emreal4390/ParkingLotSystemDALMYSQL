@@ -1,11 +1,9 @@
-﻿using ParkingLotSystem.Business.Interfaces;
-using ParkingLotSystem.DataAccess.Interfaces;
+﻿using ParkingLotSystem.Server.Business.Interfaces;
 using ParkingLotSystem.Server.Core.Entities;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using ParkingLotSystem.Server.DataAccess.Interfaces;
 
 
-namespace ParkingLotSystem.Business.Services
+namespace ParkingLotSystem.Server.Business.Services
 {
     public class VehicleService : IVehicleService
     {
@@ -31,6 +29,14 @@ namespace ParkingLotSystem.Business.Services
             vehicle.SiteID = siteId;
             vehicle.EntryTime = DateTime.UtcNow.AddHours(3);
             await _vehicleRepository.AddAsync(vehicle);
+        }
+
+        public async Task<bool> DeleteVehicleAsync(int vehicleId, int siteId)
+        {
+            var vehicle = await _vehicleRepository.GetByIdAsync(vehicleId);
+
+            await _vehicleRepository.DeleteVehicleAsync(vehicle);
+            return true;
         }
 
         public async Task<IEnumerable<Vehicle>> GetFilteredVehicleHistoryAsync(int siteId, string? plate, string? ownerName, string? apartmentNo, DateTime? dateFrom, DateTime? dateTo, int? minDuration, int? maxDuration)

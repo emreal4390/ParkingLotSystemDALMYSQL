@@ -1,8 +1,6 @@
 ﻿using ParkingLotSystem.Server.Core.Entities;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
-namespace ParkingLotSystem.Business.Interfaces
+namespace ParkingLotSystem.Server.Business.Interfaces
 {
     public interface IVehicleService
     {
@@ -11,6 +9,7 @@ namespace ParkingLotSystem.Business.Interfaces
         Task<IEnumerable<Vehicle>> GetFilteredVehicleHistoryAsync(int siteId, string? plate, string? ownerName, string? apartmentNo, DateTime? dateFrom, DateTime? dateTo, int? minDuration, int? maxDuration);
 
         Task AddVehicleAsync(Vehicle vehicle, int siteId);
+        Task<bool> DeleteVehicleAsync(int vehicleId, int siteId);
 
         Task<bool> ExitVehicleAsync(int vehicleId, int siteId);
     }

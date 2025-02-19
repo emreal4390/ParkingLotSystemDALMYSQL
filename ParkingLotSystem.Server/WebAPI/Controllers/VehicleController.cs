@@ -1,22 +1,22 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using ParkingLotSystem.Business.Interfaces;
+using ParkingLotSystem.Server.Business.Interfaces;
 using ParkingLotSystem.Server.Core.Entities;
-using System.Collections.Generic;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
-namespace ParkingLotSystem.WebAPI.Controllers
+namespace ParkingLotSystem.Server.WebAPI.Controllers
 {
     [Route("api/vehicle")]
     [ApiController]
     public class VehicleController : ControllerBase
     {
         private readonly IVehicleService _vehicleService;
+        private readonly IAuthService _authService;
 
-        public VehicleController(IVehicleService vehicleService)
+        public VehicleController(IVehicleService vehicleService, IAuthService authService)
         {
             _vehicleService = vehicleService;
+            _authService = authService;
         }
 
         [HttpGet("active")]
@@ -62,6 +62,43 @@ namespace ParkingLotSystem.WebAPI.Controllers
             return NoContent();
         }
 
+        //[HttpPost("exit")]
+        //public async Task<IActionResult> ExitVehicle([FromBody] Vehicle vehicle)
+        //{
+        //    //headerden gelen datayı al , clientId clientSecret olucak AuthService gönder burdan siteId yi al 
+
+        //    bool success = await _vehicleService.ExitVehicleAsync(id, userSiteId.Value);
+        //    if (!success)
+        //        return NotFound("Araç bulunamadı veya yetkisiz işlem.");
+
+        //    return NoContent();
+        //}
+
+        [HttpPost("exit")]
+        public async Task<IActionResult> ExitVehicle([FromBody] Vehicle vehicle, [FromHeader] string clientId, [FromHeader] string siteSecret)
+        {
+            if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(siteSecret))
+            {
+                return BadRequest("Eksik kimlik bilgileri.");
+            }
+
+            // AuthService'e clientId ve clientSecret ile siteId'yi almak için istek at
+            int? siteId = await _authService.GetSiteIdFromAuthAsync(clientId, siteSecret);
+
+            if (siteId == null)
+            {
+                return Unauthorized("Geçersiz kimlik bilgileri.");
+            }
+
+            bool success = await _vehicleService.ExitVehicleAsync(vehicle.Id, siteId.Value);
+            if (!success)
+                return NotFound("Araç bulunamadı veya yetkisiz işlem.");
+
+            return NoContent();
+        }
+
+
+
         [HttpGet("history")]
         [Authorize(Roles = "Admin,SuperAdmin")]
         public async Task<ActionResult<IEnumerable<Vehicle>>> GetVehicleHistory()
@@ -93,11 +130,27 @@ namespace ParkingLotSystem.WebAPI.Controllers
             return Ok(vehicles);
         }
 
+        [Authorize]
+        [Authorize(Roles = "SuperAdmin")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteVehicle(int id)
+        {
+            int? userSiteId = GetUserSiteIdFromToken();
+            if (userSiteId == null)
+                return Unauthorized("Yetkilendirme hatası: Site bilgisi eksik!");
+
+            bool deleted = await _vehicleService.DeleteVehicleAsync(id, userSiteId.Value);
+            if (!deleted)
+                return NotFound("Araç bulunamadı veya yetkiniz yok!");
+
+            return NoContent();
+        }
+
         private int? GetUserSiteIdFromToken()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             var siteIdClaim = identity?.FindFirst("SiteID");
-            return int.TryParse(siteIdClaim?.Value, out int siteId) ? siteId : (int?)null;
+            return int.TryParse(siteIdClaim?.Value, out int siteId) ? siteId : null;
         }
     }
 }

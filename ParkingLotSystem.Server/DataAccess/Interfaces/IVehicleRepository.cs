@@ -1,9 +1,6 @@
-﻿
-using ParkingLotSystem.Server.Core.Entities;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using ParkingLotSystem.Server.Core.Entities;
 
-namespace ParkingLotSystem.DataAccess.Interfaces
+namespace ParkingLotSystem.Server.DataAccess.Interfaces
 {
     public interface IVehicleRepository : IRepository<Vehicle>
     {
@@ -12,6 +9,7 @@ namespace ParkingLotSystem.DataAccess.Interfaces
 
         Task<IEnumerable<Vehicle>> GetFilteredVehicleHistoryAsync(int siteId, string? plate, string? ownerName, string? apartmentNo, DateTime? dateFrom, DateTime? dateTo, int? minDuration, int? maxDuration);
 
-        Task<Vehicle> GetByIdAsync(int vehicleId);
+        Task DeleteVehicleAsync(Vehicle vehicle);
+        //Task<Vehicle> GetByIdAsync(int vehicleId);
     }
 }

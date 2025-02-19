@@ -15,7 +15,7 @@ public class Site
     public string SiteSecret { get; set; }
 
     [Required]
-    public int ClientID { get; set; } // 🔥 Artık her site bir Client'a ait
+    public int ClientID { get; set; } //  Artık her site bir Client'a ait
 
     [Required]
     [Column(TypeName = "varchar(36)")]

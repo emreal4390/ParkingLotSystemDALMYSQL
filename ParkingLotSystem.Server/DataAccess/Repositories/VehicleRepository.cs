@@ -1,14 +1,9 @@
-﻿using ParkingLotSystem.DataAccess.Contexts;
-using ParkingLotSystem.DataAccess.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
 using ParkingLotSystem.Server.Core.Entities;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
+using ParkingLotSystem.Server.DataAccess.Contexts;
+using ParkingLotSystem.Server.DataAccess.Interfaces;
 
-
-
-namespace ParkingLotSystem.DataAccess.Repositories
+namespace ParkingLotSystem.Server.DataAccess.Repositories
 {
     public class VehicleRepository : GenericRepository<Vehicle>, IVehicleRepository
     {
@@ -26,6 +21,16 @@ namespace ParkingLotSystem.DataAccess.Repositories
             return await _context.Vehicles
                 .Where(v => v.SiteID == siteId)
                 .ToListAsync();
+        }
+        public async Task<Vehicle> GetByIdAsync(int vehicleId)
+        {
+            return await _context.Vehicles.FindAsync(vehicleId);
+        }
+
+        public async Task DeleteVehicleAsync(Vehicle vehicle)
+        {
+            _context.Vehicles.Remove(vehicle);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Vehicle>> GetFilteredVehicleHistoryAsync(int siteId, string? plate, string? ownerName, string? apartmentNo, DateTime? dateFrom, DateTime? dateTo, int? minDuration, int? maxDuration)
@@ -48,18 +53,15 @@ namespace ParkingLotSystem.DataAccess.Repositories
 
             if (minDuration.HasValue)
                 vehicles = vehicles.Where(v => v.ExitTime != null &&
-                     MySqlDbFunctionsExtensions.DateDiffMinute(EF.Functions, v.EntryTime, v.ExitTime) <= maxDuration);
+                     EF.Functions.DateDiffMinute(v.EntryTime, v.ExitTime) <= maxDuration);
 
             if (maxDuration.HasValue)
                 vehicles = vehicles.Where(v => v.ExitTime != null &&
-                    (MySqlDbFunctionsExtensions.DateDiffMinute(EF.Functions, v.EntryTime, v.ExitTime) <= maxDuration));
+                    EF.Functions.DateDiffMinute(v.EntryTime, v.ExitTime) <= maxDuration);
 
             return await vehicles.ToListAsync();
         }
 
-        public async Task<Vehicle> GetByIdAsync(int vehicleId)
-        {
-            return await _context.Vehicles.FindAsync(vehicleId);
-        }
+
     }
 }

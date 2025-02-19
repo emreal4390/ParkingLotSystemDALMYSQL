@@ -3,7 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using ParkingLotSystem.DataAccess.Contexts;
+using ParkingLotSystem.Server.DataAccess.Contexts;
 
 #nullable disable
 
