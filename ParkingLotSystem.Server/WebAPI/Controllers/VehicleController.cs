@@ -74,28 +74,7 @@ namespace ParkingLotSystem.Server.WebAPI.Controllers
         //    return NoContent();
         //}
 
-        [HttpPost("exit")]
-        public async Task<IActionResult> ExitVehicle([FromBody] Vehicle vehicle, [FromHeader] string clientId, [FromHeader] string siteSecret)
-        {
-            if (string.IsNullOrEmpty(clientId) || string.IsNullOrEmpty(siteSecret))
-            {
-                return BadRequest("Eksik kimlik bilgileri.");
-            }
-
-            // AuthService'e clientId ve clientSecret ile siteId'yi almak için istek at
-            int? siteId = await _authService.GetSiteIdFromAuthAsync(clientId, siteSecret);
-
-            if (siteId == null)
-            {
-                return Unauthorized("Geçersiz kimlik bilgileri.");
-            }
-
-            bool success = await _vehicleService.ExitVehicleAsync(vehicle.Id, siteId.Value);
-            if (!success)
-                return NotFound("Araç bulunamadı veya yetkisiz işlem.");
-
-            return NoContent();
-        }
+     
 
 
 

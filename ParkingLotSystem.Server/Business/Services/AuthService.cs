@@ -14,14 +14,14 @@ namespace ParkingLotSystem.Server.Business.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
-        private readonly HttpClient _httpClient;
+        
 
 
-        public AuthService(IUserRepository userRepository, IConfiguration configuration, HttpClient httpClient)
+        public AuthService(IUserRepository userRepository, IConfiguration configuration)
         {
             _userRepository = userRepository;
             _configuration = configuration;
-            _httpClient = httpClient;
+            
         }
 
         public async Task<(string token, string role, int siteID, string siteSecret)> AuthenticateAsync(string email, string password)
@@ -60,22 +60,7 @@ namespace ParkingLotSystem.Server.Business.Services
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        public async Task<int?> GetSiteIdFromAuthAsync(string clientId, string siteSecret)
-        {
-            var authRequest = new
-            {
-                ClientId = clientId,
-               SiteSecret= siteSecret,
-            };
-
-            var response = await _httpClient.PostAsJsonAsync("https://authserver.com/api/auth/getSiteId", authRequest);
-
-            if (!response.IsSuccessStatusCode)
-                return null;
-
-            var responseData = await response.Content.ReadFromJsonAsync<AuthResponseDto>();
-            return responseData?.SiteId;
-        }
+      
 
     }
 }
